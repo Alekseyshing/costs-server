@@ -1,9 +1,10 @@
 /* eslint-disable prettier/prettier */
-import { Body, Controller, Get, HttpCode, HttpStatus, Post, Req, Res, UseGuards } from '@nestjs/common';
+import { Body, Controller, Get, HttpCode, HttpStatus, Param, Patch, Post, Req, Res, UseGuards } from '@nestjs/common';
 import { AuthService } from 'src/auth/auth.service';
 import { JWTGuard } from 'src/auth/guards/jwt.guard';
 import { CostsService } from './costs.service';
 import { CreateCostsDto } from './dto/create-costs.dto';
+import { UpdateCostsDto } from './dto/update-costs.dto';
 
 @Controller('cost')
 export class CostsController {
@@ -35,5 +36,18 @@ export class CostsController {
       ...createCostsDto,
       userId: user._id as string,
     })
+  }
+
+  @UseGuards(JWTGuard)
+  @Patch(':id')
+  @HttpCode(HttpStatus.OK)
+  async updateCosts(
+    @Body() updateCostsDto: UpdateCostsDto,
+    @Param('id') id: string,
+  ) {
+
+    const data = await this.costsService.update(updateCostsDto, id)
+    console.log(data);
+    return data
   }
 }
