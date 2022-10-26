@@ -1,8 +1,9 @@
 /* eslint-disable prettier/prettier */
-import { Controller, Get, HttpCode, HttpStatus, Req, Res, UseGuards } from '@nestjs/common';
+import { Body, Controller, Get, HttpCode, HttpStatus, Post, Req, Res, UseGuards } from '@nestjs/common';
 import { AuthService } from 'src/auth/auth.service';
 import { JWTGuard } from 'src/auth/guards/jwt.guard';
 import { CostsService } from './costs.service';
+import { CreateCostsDto } from './dto/create-costs.dto';
 
 @Controller('cost')
 export class CostsController {
@@ -23,5 +24,16 @@ export class CostsController {
     )
 
     return res.send(filteredCosts)
+  }
+
+  @UseGuards(JWTGuard)
+  @Post()
+  @HttpCode(HttpStatus.OK)
+  async createCosts(@Body() createCostsDto: CreateCostsDto, @Req() req) {
+    const user = await this.authService.getUserByTokenData(req.token);
+    return await this.costsService.create({
+      ...createCostsDto,
+      userId: user._id as string,
+    })
   }
 }
