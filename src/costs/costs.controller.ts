@@ -1,5 +1,5 @@
 /* eslint-disable prettier/prettier */
-import { Body, Controller, Get, HttpCode, HttpStatus, Param, Patch, Post, Req, Res, UseGuards } from '@nestjs/common';
+import { Body, Controller, Delete, Get, HttpCode, HttpStatus, Param, Patch, Post, Req, Res, UseGuards } from '@nestjs/common';
 import { AuthService } from 'src/auth/auth.service';
 import { JWTGuard } from 'src/auth/guards/jwt.guard';
 import { CostsService } from './costs.service';
@@ -45,9 +45,13 @@ export class CostsController {
     @Body() updateCostsDto: UpdateCostsDto,
     @Param('id') id: string,
   ) {
+    return await this.costsService.update(updateCostsDto, id);
+  }
 
-    const data = await this.costsService.update(updateCostsDto, id)
-    console.log(data);
-    return data
+  @UseGuards(JWTGuard)
+  @Delete(':id')
+  @HttpCode(HttpStatus.OK)
+  async deleteCosts(@Param('id') id: string) {
+    return await this.costsService.delete(id);
   }
 }
