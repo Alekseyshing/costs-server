@@ -13,6 +13,8 @@ lerna-debug.log*
 
 # Gitignore .env files
 .env*.local
+.env
+
 # OS
 .DS_Store
 
