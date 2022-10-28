@@ -10,8 +10,9 @@ pnpm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 lerna-debug.log*
-.env
 
+# Gitignore .env files
+.env*.local
 # OS
 .DS_Store
 
